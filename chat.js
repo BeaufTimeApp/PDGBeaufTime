@@ -127,6 +127,13 @@ loadNotifications=async function(){
   $$('[data-notif]').forEach(r=>r.onclick=async()=>{await db.from('notifications').update({is_read:true}).eq('id',r.dataset.notif);await loadNotificationCount();if(r.dataset.type==='message')openConversation(r.dataset.actor);else if(r.dataset.type==='friend_request'){go('communityScreen');loadCommunity()}else openUserProfile(r.dataset.actor)});
 };
 
-// Polling léger pour la bêta : badges et notifications restent à jour entre deux téléphones.
 setInterval(()=>{if(user){loadNotificationCount();if(currentScreen==='chatScreen')loadChatContacts()}},5000);
 window.addEventListener('focus',()=>{if(user){loadNotificationCount();if(currentScreen==='chatScreen')loadChatContacts();if(currentScreen==='conversationScreen')refreshConversation(true)}});
+
+// Charge le module vidéo sans modifier index.html.
+if(!document.querySelector('script[data-beauftime-media]')){
+  const mediaScript=document.createElement('script');
+  mediaScript.src='./media.js?v=7';
+  mediaScript.dataset.beauftimeMedia='1';
+  document.body.appendChild(mediaScript);
+}
